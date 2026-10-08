@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>I'm Sorry 🥺 — From Rishabh</title>
+<meta name="description" content="A heartfelt apology from Rishabh." />
+<meta name="theme-color" content="#1c1b3a" />
+
+<!-- Fonts are optional: if they fail to load, system fallbacks are used. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* =========================================================
+   1. THEME TOKENS
+   ========================================================= */
+:root {
+  --night-1: #12142b;
+  --night-2: #221f45;
+  --night-3: #3a2d5c;
+  --mist: #b8b2e0;
+  --text: #f1edff;
+  --text-soft: #cfc8ef;
+  --rose: #ff8fab;
+  --rose-deep: #e05a83;
+  --glass: rgba(255, 255, 255, .08);
+  --glass-border: rgba(255, 255, 255, .2);
+  --font-script: 'Dancing Script', 'Brush Script MT', 'Segoe Script', cursive;
+  --font-body: 'Poppins', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  --ease-soft: cubic-bezier(.22, 1, .36, 1);
+  --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--night-1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================================
+   2. BACKGROUNDS — sad night sky ⇄ warm sunrise
+   ========================================================= */
+.bg { position: fixed; inset: 0; pointer-events: none; transition: opacity 2.4s ease; }
+.bg-sad {
+  z-index: 0;
+  background:
+    radial-gradient(60vmax 40vmax at 50% 110%, rgba(90, 70, 140, .55), transparent 70%),
+    linear-gradient(180deg, #0e1027 0%, #1c1b3a 45%, #2e2550 80%, #3a2d5c 100%);
+}
+body.deep .bg-sad { filter: brightness(.8) saturate(.85); }
+.bg-happy {
+  z-index: 0; opacity: 0;
+  background: linear-gradient(160deg, #ffd1dc 0%, #ffb3c9 30%, #e5ccff 65%, #fff1e6 100%);
+}
+body.happy .bg-happy { opacity: 1; }
+body.happy .bg-sad   { opacity: 0; }
+
+/* moon */
+.moon {
+  position: fixed; z-index: 0; top: 9vh; left: 12vw;
+  width: 74px; height: 74px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 38%, #fffbe8, #e7e2ff 60%, #b9b2e8);
+  box-shadow: 0 0 40px 10px rgba(220, 215, 255, .25), 0 0 120px 40px rgba(160, 150, 230, .15);
+  opacity: .85;
+  pointer-events: none;
+  transition: opacity 2s ease, transform 2.4s ease;
+}
+body.happy .moon { opacity: 0; transform: translateY(-40px); }
+
+/* drifting fog */
+.fog {
+  position: fixed; z-index: 0; left: -20vw; width: 140vw; height: 30vh;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(190, 180, 240, .14), transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+  animation: fog 28s ease-in-out infinite alternate;
+  transition: opacity 2s ease;
+}
+.fog.f1 { bottom: 4vh; }
+.fog.f2 { bottom: 26vh; animation-duration: 36s; animation-delay: -12s; opacity: .7; }
+body.happy .fog { opacity: 0; }
+@keyframes fog { from { transform: translateX(-8vw); } to { transform: translateX(8vw); } }
+
+/* rain + hearts canvas (behind cards, never blocks clicks) */
+#fx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+#burst { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 120; pointer-events: none; }
+
+/* floating hearts for the happy ending */
+#heartsLayer { position: fixed; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
+.float-heart {
+  position: absolute; top: 0;
+  animation: floatUp linear both;
+  filter: drop-shadow(0 2px 4px rgba(209, 42, 92, .25));
+}
+@keyframes floatUp {
+  0%   { transform: translate3d(0, 105vh, 0) rotate(0deg); opacity: 0; }
+  10%  { opacity: .9; }
+  100% { transform: translate3d(var(--drift, 0px), -12vh, 0) rotate(var(--spin, 0deg)); opacity: 0; }
+}
+
+/* =========================================================
+   3. TOP BAR: progress dots, music button, toast
+   ========================================================= */
+#progress {
+  position: fixed; top: 22px; left: 16px; z-index: 110;
+  display: flex; gap: 8px;
+  transition: opacity .6s ease;
+}
+#progress span {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: rgba(255, 255, 255, .25);
+  transition: background .4s ease, transform .4s ease;
+}
+#progress span.done { background: var(--rose); }
+#progress span.now  { background: #fff; transform: scale(1.35); }
+body.happy #progress { opacity: 0; }
+
+#musicBtn {
+  position: fixed; top: 12px; right: 14px; z-index: 110;
+  width: 48px; height: 48px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, .12);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: #fff; font-size: 20px; line-height: 1;
+  cursor: pointer;
+  transition: transform .2s ease, background .6s ease;
+}
+#musicBtn:hover { transform: scale(1.08); }
+#musicBtn:focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; }
+#musicBtn:disabled { opacity: .5; cursor: not-allowed; }
+body.happy #musicBtn { background: rgba(255, 255, 255, .6); border-color: #fff; }
+
+#toast {
+  position: fixed; top: 14px; left: 50%; z-index: 115;
+  max-width: min(420px, calc(100vw - 150px));
+  padding: 11px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .92);
+  color: #3b2346;
+  font-weight: 600; font-size: .95rem; line-height: 1.35; text-align: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .25);
+  transform: translate(-50%, -160%); opacity: 0;
+  pointer-events: none;
+  transition: transform .45s var(--ease-bounce), opacity .3s ease;
+}
+#toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+/* =========================================================
+   4. SCREENS + GLASS CARD
+   ========================================================= */
+.screen {
+  position: fixed; inset: 0; z-index: 2;
+  display: flex; flex-direction: column;
+  overflow-x: hidden; overflow-y: auto;
+  padding: 74px 16px 36px;
+  opacity: 0; visibility: hidden;
+  transform: translateY(14px);
+  transition: opacity .9s ease, transform .9s var(--ease-soft), visibility 0s linear .9s;
+}
+.screen.is-active {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity .9s ease .15s, transform .9s var(--ease-soft) .15s, visibility 0s;
+}
+
+.card {
+  position: relative;
+  margin: auto;
+  width: min(100%, 560px);
+  padding: clamp(22px, 5vw, 38px);
+  border-radius: 30px;
+  background: linear-gradient(150deg, rgba(255, 255, 255, .11), rgba(255, 255, 255, .04));
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+  text-align: center;
+}
+.card.wide { width: min(100%, 660px); }
+.card.light {
+  color: #4a1531;
+  background: linear-gradient(145deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .4));
+  border-color: rgba(255, 255, 255, .8);
+  box-shadow: 0 24px 60px rgba(168, 18, 74, .18);
+}
+
+.fade-up { opacity: 0; }
+.screen.is-active .fade-up { animation: fadeUp 1s var(--ease-soft) both; }
+.screen.is-active .d1 { animation-delay: .3s; }
+.screen.is-active .d2 { animation-delay: .55s; }
+.screen.is-active .d3 { animation-delay: .8s; }
+.screen.is-active .d4 { animation-delay: 1.05s; }
+.screen.is-active .d5 { animation-delay: 1.3s; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* =========================================================
+   5. TYPOGRAPHY
+   ========================================================= */
+[tabindex="-1"]:focus { outline: none; }
+h1, h2 { font-family: var(--font-script); font-weight: 700; margin: .2em 0 .35em; line-height: 1.2; }
+h1 { font-size: clamp(2.1rem, 8vw, 3.1rem); }
+h2 { font-size: clamp(1.9rem, 7vw, 2.6rem); }
+.card:not(.light) h1, .card:not(.light) h2 {
+  color: #ffe1ea;
+  text-shadow: 0 0 18px rgba(255, 143, 171, .35);
+}
+.card.light h1 { color: #a8124a; text-shadow: 0 2px 0 rgba(255, 255, 255, .9); }
+.lead {
+  max-width: 30em; margin: 0 auto 1.2em;
+  font-size: clamp(.98rem, 2.8vw, 1.08rem);
+  line-height: 1.75;
+  color: var(--text-soft);
+}
+.card.light .lead { color: #6b2a4a; }
+.hint { font-size: .88rem; color: var(--mist); margin: .9em 0 0; min-height: 1.4em; }
+
+/* =========================================================
+   6. BUTTONS
+   ========================================================= */
+.btn-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 18px; }
+.btn {
+  min-height: 52px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  border: 0;
+  font: 600 clamp(.98rem, 3.4vw, 1.08rem)/1.2 var(--font-body);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform .25s ease, box-shadow .25s ease, opacity .4s ease, filter .25s ease;
+}
+.btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; box-shadow: 0 0 0 7px var(--rose-deep); }
+.btn:hover:not(:disabled) { transform: translateY(-2px); }
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, #ff8fab, #e05a83 55%, #b83b6c);
+  box-shadow: 0 10px 26px rgba(224, 90, 131, .4), inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+.btn-primary.pulse { animation: softPulse 2.4s ease-in-out infinite; }
+@keyframes softPulse {
+  0%, 100% { box-shadow: 0 10px 26px rgba(224, 90, 131, .4), 0 0 0 0 rgba(255, 143, 171, .4); }
+  50%      { box-shadow: 0 10px 26px rgba(224, 90, 131, .4), 0 0 0 12px rgba(255, 143, 171, 0); }
+}
+.btn-ghost {
+  color: var(--text);
+  background: rgba(255, 255, 255, .08);
+  border: 1.5px solid rgba(255, 255, 255, .35);
+}
+.btn:disabled { opacity: .4; cursor: not-allowed; filter: grayscale(.4); }
+.btn.hidden-until { visibility: hidden; opacity: 0; }
+.btn.hidden-until.show { visibility: visible; opacity: 1; animation: fadeUp .7s var(--ease-soft) both; }
+
+.link-btn {
+  margin-top: 14px; padding: 8px 12px;
+  border: 0; border-radius: 10px; background: none;
+  color: inherit; opacity: .75;
+  font: 500 .9rem var(--font-body);
+  text-decoration: underline; text-underline-offset: 3px;
+  cursor: pointer;
+}
+.link-btn:focus-visible { outline: 3px solid var(--rose-deep); outline-offset: 2px; }
+
+/* Response bubble used on screens 1 & 2 */
+.reply {
+  margin: 16px auto 0; max-width: 28em;
+  padding: 0 4px;
+  font-size: 1.02rem; line-height: 1.6;
+  color: #ffe1ea;
+  min-height: 1.6em;
+}
+.reply:not(:empty) { animation: fadeUp .6s var(--ease-soft) both; }
+
+/* =========================================================
+   7. CSS ILLUSTRATION — sad boy holding a "Sorry" sign
+   ========================================================= */
+.sad-boy { position: relative; width: 150px; height: 200px; margin: 0 auto 4px; animation: sway 4s ease-in-out infinite; }
+@keyframes sway { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg) translateY(-3px); } }
+.sad-boy .head {
+  position: absolute; left: 41px; top: 6px; z-index: 3;
+  width: 68px; height: 66px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff0e4 0%, #ffd9bf 45%, #eab08b 100%);
+  box-shadow: inset -5px -7px 12px rgba(200, 110, 80, .25);
+}
+.sad-boy .hair {
+  position: absolute; left: -3px; top: -7px; width: 74px; height: 28px;
+  border-radius: 36px 36px 12px 18px;
+  background: linear-gradient(160deg, #6b4030, #3d2218);
+}
+.sad-boy .hair::after {
+  content: ""; position: absolute; left: 10px; bottom: -5px; width: 24px; height: 11px;
+  border-radius: 0 0 12px 12px; background: #4a2a1d; transform: rotate(10deg);
+}
+.sad-boy .brow {
+  position: absolute; top: 26px; width: 13px; height: 3px; border-radius: 3px; background: #4a2a1d;
+}
+.sad-boy .brow.l { left: 15px; transform: rotate(-16deg); }
+.sad-boy .brow.r { right: 15px; transform: rotate(16deg); }
+.sad-boy .eye {
+  position: absolute; top: 32px; width: 12px; height: 13px; border-radius: 50%;
+  background: #2b1722;
+  animation: blink 5s infinite;
+}
+.sad-boy .eye::before { content: ""; position: absolute; top: 2px; left: 2px; width: 5px; height: 5px; border-radius: 50%; background: #fff; }
+.sad-boy .eye::after  { content: ""; position: absolute; bottom: 2px; right: 2px; width: 2.5px; height: 2.5px; border-radius: 50%; background: #fff; }
+.sad-boy .eye.l { left: 16px; }
+.sad-boy .eye.r { right: 16px; }
+@keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+.sad-boy .cheek { position: absolute; top: 45px; width: 12px; height: 6px; border-radius: 50%; background: rgba(255, 105, 140, .45); }
+.sad-boy .cheek.l { left: 7px; }
+.sad-boy .cheek.r { right: 7px; }
+.sad-boy .mouth {
+  position: absolute; top: 50px; left: 50%; width: 14px; height: 7px;
+  transform: translateX(-50%);
+  border: 2.5px solid #9b2c4a; border-bottom: 0;
+  border-radius: 14px 14px 0 0;
+}
+.sad-boy .tear {
+  position: absolute; left: 18px; top: 44px; width: 8px; height: 12px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: linear-gradient(180deg, #d6efff, #79c2f7);
+  animation: tear 2.4s ease-in infinite;
+}
+.sad-boy .tear.r { left: auto; right: 18px; animation-delay: -1.2s; }
+@keyframes tear {
+  0%   { transform: translateY(0) scale(.5); opacity: 0; }
+  20%  { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(30px) scale(.8); opacity: 0; }
+}
+.sad-boy .shirt {
+  position: absolute; left: 44px; top: 66px; z-index: 1;
+  width: 62px; height: 74px; border-radius: 22px 22px 12px 12px;
+  background: linear-gradient(160deg, #8fa3e8, #5468c4);
+}
+.sad-boy .sign {
+  position: absolute; left: 22px; top: 86px; z-index: 4;
+  width: 106px; padding: 10px 6px;
+  border-radius: 10px;
+  background: #fff8f1;
+  border: 2px solid #e8c9a8;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .25);
+  color: #b83b6c;
+  font: 700 1.25rem/1 var(--font-script);
+  transform: rotate(-4deg);
+  animation: signTilt 3.2s ease-in-out infinite;
+}
+@keyframes signTilt { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(3deg); } }
+.sad-boy .hand {
+  position: absolute; top: 98px; z-index: 5;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: #f7c6a3;
+}
+.sad-boy .hand.l { left: 16px; }
+.sad-boy .hand.r { right: 16px; }
+.sad-boy .leg {
+  position: absolute; top: 136px; width: 14px; height: 46px; border-radius: 6px;
+  background: #3b335e; border-bottom: 8px solid #221c3a;
+}
+.sad-boy .leg.l { left: 56px; }
+.sad-boy .leg.r { right: 56px; }
+.sad-boy .shadow {
+  position: absolute; bottom: 4px; left: 50%; width: 120px; height: 14px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(0, 0, 0, .35), transparent 70%);
+}
+.sad-boy .cloud {
+  position: absolute; top: -26px; right: -10px; font-size: 30px;
+  animation: cloud 3s ease-in-out infinite;
+}
+@keyframes cloud { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+/* =========================================================
+   8. SCREEN 2 — mood buttons
+   ========================================================= */
+.moods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
+.mood {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 16px 10px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(255, 255, 255, .22);
+  background: rgba(255, 255, 255, .06);
+  color: var(--text);
+  font: 500 .95rem/1.3 var(--font-body);
+  cursor: pointer;
+  transition: transform .25s var(--ease-bounce), background .3s ease, border-color .3s ease;
+}
+.mood .emo { font-size: 2.2rem; line-height: 1; transition: transform .4s var(--ease-bounce); }
+.mood:hover { transform: translateY(-3px); background: rgba(255, 255, 255, .1); }
+.mood:hover .emo { transform: scale(1.15) rotate(-6deg); }
+.mood[aria-pressed="true"] { border-color: var(--rose); background: rgba(255, 143, 171, .16); }
+.mood:focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; }
+
+/* =========================================================
+   9. SCREEN 3 — flip cards
+   ========================================================= */
+.flips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 6px; }
+.flip {
+  position: relative;
+  min-height: 132px;
+  padding: 0; border: 0; background: none;
+  cursor: pointer;
+  perspective: 900px;
+  color: inherit; font: inherit;
+}
+.flip:focus-visible { outline: 3px solid var(--rose); outline-offset: 4px; border-radius: 20px; }
+.flip-inner {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  transition: transform .8s var(--ease-soft);
+}
+.flip.flipped .flip-inner { transform: rotateY(180deg); }
+.flip-face {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px;
+  border-radius: 20px;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+}
+.flip-front {
+  background: linear-gradient(150deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .05));
+  border: 1.5px dashed rgba(255, 255, 255, .35);
+  font-size: .9rem; color: var(--mist);
+}
+.flip-front .emo { font-size: 2rem; animation: wiggle 2.6s ease-in-out infinite; }
+@keyframes wiggle { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+.flip-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(150deg, #fff3f6, #ffe1ea);
+  color: #5a1f3c;
+  font-size: .93rem; line-height: 1.5; font-weight: 500;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .25);
+}
+
+/* =========================================================
+   10. SCREEN 4 — promises (mend the broken hearts)
+   ========================================================= */
+.promises { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 10px; }
+.promise {
+  width: 100%;
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 16px;
+  border-radius: 18px;
+  border: 1.5px solid rgba(255, 255, 255, .22);
+  background: rgba(255, 255, 255, .06);
+  color: var(--text);
+  font: 500 .97rem/1.45 var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  transition: background .4s ease, border-color .4s ease, transform .25s ease;
+}
+.promise:hover { transform: translateX(3px); }
+.promise:focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; }
+.promise .heart { font-size: 1.7rem; line-height: 1; flex: none; transition: transform .5s var(--ease-bounce); }
+.promise .ptext { opacity: .7; }
+.promise.mended { background: rgba(255, 143, 171, .15); border-color: rgba(255, 143, 171, .7); cursor: default; }
+.promise.mended .heart { animation: mend .7s var(--ease-bounce); }
+.promise.mended .ptext { opacity: 1; animation: fadeUp .6s var(--ease-soft) both; }
+@keyframes mend { 0% { transform: scale(.4) rotate(-20deg); } 60% { transform: scale(1.35); } 100% { transform: scale(1); } }
+
+/* =========================================================
+   11. SCREEN 5 — the long letter
+   ========================================================= */
+.broken-heart { font-size: 46px; line-height: 1; animation: beatSlow 2.6s ease-in-out infinite; }
+@keyframes beatSlow { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.12); } 30% { transform: scale(1); } }
+.letter {
+  position: relative;
+  margin-top: 8px;
+  padding: clamp(20px, 4.5vw, 32px);
+  border-radius: 20px;
+  text-align: left;
+  color: #3f2236;
+  background: linear-gradient(170deg, #fffaf4, #f7ecf3);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .35), inset 0 0 40px rgba(220, 190, 220, .35);
+  font-size: clamp(.98rem, 2.7vw, 1.05rem);
+  line-height: 1.85;
+}
+.letter::before {
+  content: "🥀";
+  position: absolute; top: -16px; right: 18px; font-size: 30px;
+  transform: rotate(18deg);
+}
+.letter p { margin: 0 0 1em; opacity: 0; }
+.screen.is-active .letter p { animation: fadeUp 1.2s var(--ease-soft) both; animation-delay: calc(var(--i, 0) * .5s + .6s); }
+.letter .greet { font-family: var(--font-script); font-size: 1.7rem; font-weight: 700; color: #a8124a; line-height: 1.3; }
+.letter .strong { font-weight: 600; color: #a8124a; }
+.letter .sign {
+  font-family: var(--font-script); font-weight: 700;
+  font-size: clamp(1.6rem, 6vw, 2rem); color: #a8124a;
+  text-align: right; line-height: 1.3; margin-bottom: 0;
+}
+
+/* =========================================================
+   12. SCREEN 6 — forgiven (couple hug)
+   ========================================================= */
+.couple { position: relative; width: 230px; height: 176px; margin: 0 auto; }
+.couple .person { position: absolute; bottom: 8px; width: 80px; height: 156px; }
+.couple .boy  { left: 32px; animation: boyIn 1.6s var(--ease-soft) both, bob 3.2s ease-in-out 1.6s infinite; }
+.couple .girl { right: 32px; animation: girlIn 1.6s var(--ease-soft) both, bob 3.2s ease-in-out 1.6s infinite; }
+@keyframes boyIn  { from { translate: -60px 0; rotate: 0deg; } to { translate: 8px 0; rotate: 7deg; } }
+@keyframes girlIn { from { translate: 60px 0; rotate: 0deg; } to { translate: -8px 0; rotate: -7deg; } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.couple .head {
+  position: absolute; left: 12px; top: 8px; z-index: 3; width: 56px; height: 56px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff0e4 0%, #ffd9bf 45%, #f2b48f 100%);
+}
+.couple .eye {
+  position: absolute; top: 28px; width: 10px; height: 6px;
+  border: 2.5px solid #3a1f2b; border-bottom: 0; border-radius: 10px 10px 0 0;   /* happy closed eyes ^^ */
+}
+.couple .eye.l { left: 13px; }
+.couple .eye.r { right: 13px; }
+.couple .cheek { position: absolute; top: 36px; width: 11px; height: 6px; border-radius: 50%; background: rgba(255, 105, 140, .55); }
+.couple .cheek.l { left: 6px; }
+.couple .cheek.r { right: 6px; }
+.couple .mouth {
+  position: absolute; top: 39px; left: 50%; width: 12px; height: 6px; transform: translateX(-50%);
+  border: 2.5px solid #9b2c4a; border-top: 0; border-radius: 0 0 12px 12px;
+}
+.hair-boy { position: absolute; left: -3px; top: -6px; width: 62px; height: 24px; border-radius: 30px 30px 10px 16px; background: linear-gradient(160deg, #6b4030, #3d2218); }
+.shirt { position: absolute; left: 17px; top: 58px; z-index: 2; width: 46px; height: 60px; border-radius: 18px 18px 10px 10px; background: linear-gradient(160deg, #a5b9ff, #5b78e8); }
+.hair-back { position: absolute; left: 6px; top: 2px; z-index: 1; width: 68px; height: 100px; border-radius: 34px 34px 22px 22px; background: linear-gradient(180deg, #7a3b2a, #56281c); }
+.bangs { position: absolute; left: -3px; top: -5px; width: 62px; height: 22px; border-radius: 30px 30px 14px 14px; background: linear-gradient(170deg, #8a4632, #62301f); }
+.bow { position: absolute; top: -13px; right: -6px; font-size: 20px; transform: rotate(18deg); }
+.dress { position: absolute; left: 8px; top: 58px; z-index: 2; width: 64px; height: 64px; background: linear-gradient(160deg, #ffc0d4, #ff6f98); clip-path: polygon(28% 0, 72% 0, 100% 100%, 0 100%); }
+.couple .arm {
+  position: absolute; top: 64px; z-index: 4; width: 11px; height: 40px; border-radius: 6px;
+  background: #f7c6a3; transform-origin: 50% 4px;
+}
+.boy .arm  { left: 59px; transform: rotate(-72deg); }
+.girl .arm { left: 10px; transform: rotate(72deg); }
+.couple .leg { position: absolute; top: 114px; width: 11px; height: 34px; border-radius: 5px; background: #4b3f72; border-bottom: 7px solid #2d2342; }
+.girl .leg { top: 118px; height: 30px; background: #f7c6a3; border-bottom-color: #d12a5c; }
+.couple .leg.l { left: 25px; }
+.couple .leg.r { right: 25px; }
+.couple-heart {
+  position: absolute; left: 50%; top: -12px; font-size: 34px;
+  transform: translateX(-50%);
+  animation: popIn .7s var(--ease-bounce) 1.3s both, floatHeart 2.6s ease-in-out 2s infinite;
+}
+@keyframes popIn { from { scale: 0; opacity: 0; } to { scale: 1; opacity: 1; } }
+@keyframes floatHeart { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+.couple .ground { position: absolute; bottom: 0; left: 50%; width: 180px; height: 18px; transform: translateX(-50%); background: radial-gradient(ellipse, rgba(168, 18, 74, .22), transparent 70%); }
+.couple.jump { animation: jump .8s ease; }
+@keyframes jump { 0%, 100% { translate: 0 0; } 30% { translate: 0 -20px; } 60% { translate: 0 0; } 78% { translate: 0 -8px; } }
+
+/* =========================================================
+   13. MODAL — "I need some time"
+   ========================================================= */
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 112;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  background: rgba(8, 8, 25, .55);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  opacity: 0; transition: opacity .35s ease;
+}
+.modal-backdrop[hidden] { display: none; }
+.modal-backdrop.open { opacity: 1; }
+.modal {
+  width: min(100%, 440px);
+  padding: 28px 24px 22px;
+  border-radius: 26px;
+  background: linear-gradient(160deg, #2b2752, #3a2d5c);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .45);
+  text-align: center;
+  transform: translateY(20px) scale(.95);
+  transition: transform .5s var(--ease-bounce);
+}
+.modal-backdrop.open .modal { transform: none; }
+.modal p { color: var(--text-soft); line-height: 1.65; margin: .5em 0; }
+.modal .big { font-size: 48px; line-height: 1; }
+
+/* =========================================================
+   14. RESPONSIVE + REDUCED MOTION
+   ========================================================= */
+@media (max-width: 480px) {
+  .screen { padding: 68px 12px 28px; }
+  .sad-boy { scale: .85; margin: -12px auto -16px; }
+  .couple { scale: .85; margin: -10px auto -14px; }
+  .moods, .flips { gap: 10px; }
+  .flip { min-height: 150px; }
+  .moon { width: 54px; height: 54px; top: 7vh; left: 8vw; }
+}
+@media (max-width: 340px) {
+  .moods, .flips { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: .15s !important;
+    transition-delay: 0s !important;
+  }
+  .float-heart { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<noscript>
+  <p style="position:relative;z-index:5;text-align:center;padding:2rem;color:#fff;">
+    Please enable JavaScript to read Rishabh's message 🥺
+  </p>
+</noscript>
+
+<!-- Backgrounds -->
+<div class="bg bg-sad" aria-hidden="true"></div>
+<div class="bg bg-happy" aria-hidden="true"></div>
+<div class="moon" aria-hidden="true"></div>
+<div class="fog f1" aria-hidden="true"></div>
+<div class="fog f2" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div id="heartsLayer" aria-hidden="true"></div>
+<canvas id="burst" aria-hidden="true"></canvas>
+
+<!-- Top bar -->
+<div id="progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+<button id="musicBtn" type="button" aria-pressed="false" aria-label="Play music" title="Play music">🎵</button>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<main>
+  <!-- ============ SCREEN 1: INTRO ============ -->
+  <section id="s1" class="screen" aria-labelledby="t1">
+    <div class="card">
+      <div class="sad-boy fade-up" aria-hidden="true">
+        <div class="cloud">🌧️</div>
+        <div class="head">
+          <div class="hair"></div>
+          <i class="brow l"></i><i class="brow r"></i>
+          <i class="eye l"></i><i class="eye r"></i>
+          <i class="tear"></i><i class="tear r"></i>
+          <i class="cheek l"></i><i class="cheek r"></i>
+          <i class="mouth"></i>
+        </div>
+        <div class="shirt"></div>
+        <div class="sign">Sorry 🥺</div>
+        <i class="hand l"></i><i class="hand r"></i>
+        <div class="leg l"></div><div class="leg r"></div>
+        <div class="shadow"></div>
+      </div>
+      <h1 id="t1" class="fade-up d1">Hey <span class="her-name">you</span>... 🥺</h1>
+      <p class="lead fade-up d2">I know you're upset with me right now. And you have every reason to be. But before you close this… can you give me just a few minutes of your time?</p>
+      <div class="btn-row fade-up d3">
+        <button type="button" class="btn btn-primary pulse" data-next="s2">Okay, I'm listening 🤍</button>
+        <button type="button" class="btn btn-ghost" id="stillAngry">I'm still angry 😤</button>
+      </div>
+      <p class="reply" id="reply1" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 2: HOW UPSET ARE YOU? ============ -->
+  <section id="s2" class="screen" aria-labelledby="t2">
+    <div class="card">
+      <h2 id="t2" class="fade-up">How upset are you with me right now?</h2>
+      <p class="lead fade-up d1">Be honest. I can take it. 🥺</p>
+      <div class="moods fade-up d2" role="group" aria-label="How upset are you">
+        <button type="button" class="mood" aria-pressed="false" data-reply="Even a little is too much. I never want to be the reason behind that frown. 🥺"><span class="emo" aria-hidden="true">😕</span>A little upset</button>
+        <button type="button" class="mood" aria-pressed="false" data-reply="I understand. You have every right to be. Please let me try to make it right. 💔"><span class="emo" aria-hidden="true">😠</span>Really angry</button>
+        <button type="button" class="mood" aria-pressed="false" data-reply="I deserve that. Thank you for still being here and reading this. 🥹"><span class="emo" aria-hidden="true">😡</span>Very, very angry</button>
+        <button type="button" class="mood" aria-pressed="false" data-reply="Okay… I'll speak very softly then. Just a few more minutes, please? 🙏🥺"><span class="emo" aria-hidden="true">🌋</span>Don't talk to me!</button>
+      </div>
+      <p class="reply" id="reply2" aria-live="polite"></p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary hidden-until" id="next2" data-next="s3">Continue 🤍</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3: WHAT I'M SORRY FOR ============ -->
+  <section id="s3" class="screen" aria-labelledby="t3">
+    <div class="card">
+      <h2 id="t3" class="fade-up">I'm sorry for…</h2>
+      <p class="lead fade-up d1">Tap each card. These are things I should have said much sooner.</p>
+      <div class="flips fade-up d2">
+        <button type="button" class="flip" aria-label="Flip card 1"><span class="flip-inner"><span class="flip-face flip-front"><span class="emo" aria-hidden="true">🥀</span>Tap me</span><span class="flip-face flip-back">Hurting you, even if I didn't mean to. Your feelings matter more than my reasons.</span></span></button>
+        <button type="button" class="flip" aria-label="Flip card 2"><span class="flip-inner"><span class="flip-face flip-front"><span class="emo" aria-hidden="true">🥀</span>Tap me</span><span class="flip-face flip-back">Not listening properly when you needed me to.</span></span></button>
+        <button type="button" class="flip" aria-label="Flip card 3"><span class="flip-inner"><span class="flip-face flip-front"><span class="emo" aria-hidden="true">🥀</span>Tap me</span><span class="flip-face flip-back">Letting my ego speak louder than my love for you.</span></span></button>
+        <button type="button" class="flip" aria-label="Flip card 4"><span class="flip-inner"><span class="flip-face flip-front"><span class="emo" aria-hidden="true">🥀</span>Tap me</span><span class="flip-face flip-back">Every tear I caused. You deserve only smiles. 🤍</span></span></button>
+      </div>
+      <p class="hint" id="hint3" aria-live="polite">0 of 4 opened</p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" id="next3" data-next="s4" disabled>Continue 🤍</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 4: PROMISES ============ -->
+  <section id="s4" class="screen" aria-labelledby="t4">
+    <div class="card">
+      <h2 id="t4" class="fade-up">Help me mend these hearts 💔</h2>
+      <p class="lead fade-up d1">Each one holds a promise I'm making to you. Tap to mend them.</p>
+      <ul class="promises fade-up d2">
+        <li><button type="button" class="promise" data-text="I'll listen first, and talk later."><span class="heart" aria-hidden="true">💔</span><span class="ptext">Tap to mend</span></button></li>
+        <li><button type="button" class="promise" data-text="I'll never let us sleep while we're angry at each other."><span class="heart" aria-hidden="true">💔</span><span class="ptext">Tap to mend</span></button></li>
+        <li><button type="button" class="promise" data-text="I'll show you I'm sorry with actions, not just words."><span class="heart" aria-hidden="true">💔</span><span class="ptext">Tap to mend</span></button></li>
+        <li><button type="button" class="promise" data-text="I'll be more patient, gentle and careful with your heart."><span class="heart" aria-hidden="true">💔</span><span class="ptext">Tap to mend</span></button></li>
+        <li><button type="button" class="promise" data-text="I'll keep choosing you, especially on the hard days."><span class="heart" aria-hidden="true">💔</span><span class="ptext">Tap to mend</span></button></li>
+      </ul>
+      <p class="hint" id="hint4" aria-live="polite">0 of 5 mended</p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" id="next4" data-next="s5" disabled>One last thing… 💌</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 5: THE LONG SORRY LETTER ============ -->
+  <section id="s5" class="screen" aria-labelledby="t5">
+    <div class="card wide">
+      <div class="broken-heart fade-up" aria-hidden="true">💔</div>
+      <h2 id="t5" class="fade-up d1">A letter for you</h2>
+      <div class="letter">
+        <p class="greet" style="--i:0">My dearest <span class="her-name">love</span>,</p>
+        <p style="--i:1">I've started writing this so many times… and every time I stopped, because no words ever felt big enough to hold how sorry I am.</p>
+        <p style="--i:2">I know I hurt you. And whatever I did, whatever I said, or whatever I didn't say, the worst part isn't the mistake itself. It's knowing that I made the person I love most feel sad, alone, or unimportant. You never deserved that. Not for a single second.</p>
+        <p style="--i:3">You are the one who always cares, who always understands, who always tries. And this time, I let you down. I'm not writing this to make excuses, because there aren't any. I'm writing this because I want you to know that I see it now. I see how much it hurt you, and I am truly, deeply sorry.</p>
+        <p style="--i:4">Ever since you've been upset, everything feels quiet in the wrong way. My phone feels empty without your messages. My jokes don't feel funny without your laugh. Even my good moments don't feel complete, because you are the best part of all of them.</p>
+        <p style="--i:5">I don't expect you to forgive me instantly. Your feelings are real, and they matter to me more than my own comfort. Be angry if you need to be. Take all the time you need. I'll still be right here: patient, waiting, and trying every day to be better for you.</p>
+        <p style="--i:6">But please know this: <span class="strong">my love for you never changed, not even for a moment.</span> Not during the fight, not during the silence. I'm so sorry if I ever made you doubt that.</p>
+        <p style="--i:7">I promise to learn from this. To listen more carefully, to speak more gently, and to hold your heart the way it deserves to be held, with care.</p>
+        <p style="--i:8">If you can find it in your heart to forgive me, I'll spend every day showing you that you made the right choice. And if you can't yet, I'll wait. Because you are worth waiting for. Always.</p>
+        <p class="strong" style="--i:9">I'm sorry, my love. From the bottom of my heart. 🥺</p>
+        <p class="sign" style="--i:10">Yours, always and only,<br />Rishabh 🤍</p>
+      </div>
+      <div class="btn-row" id="forgiveRow">
+        <button type="button" class="btn btn-primary pulse" id="forgiveBtn">I forgive you 🤍</button>
+        <button type="button" class="btn btn-ghost" id="timeBtn">I need some time ⏳</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 6: FORGIVEN ============ -->
+  <section id="s6" class="screen" aria-labelledby="t6">
+    <div class="card light">
+      <div class="couple" id="couple" aria-hidden="true">
+        <div class="couple-heart">💖</div>
+        <div class="person boy">
+          <div class="head"><div class="hair-boy"></div><i class="eye l"></i><i class="eye r"></i><i class="cheek l"></i><i class="cheek r"></i><i class="mouth"></i></div>
+          <div class="arm"></div><div class="shirt"></div>
+          <div class="leg l"></div><div class="leg r"></div>
+        </div>
+        <div class="person girl">
+          <div class="hair-back"></div>
+          <div class="head"><div class="bangs"></div><span class="bow">🎀</span><i class="eye l"></i><i class="eye r"></i><i class="cheek l"></i><i class="cheek r"></i><i class="mouth"></i></div>
+          <div class="arm"></div><div class="dress"></div>
+          <div class="leg l"></div><div class="leg r"></div>
+        </div>
+        <div class="ground"></div>
+      </div>
+      <h1 id="t6" tabindex="-1" class="fade-up d1">Thank you for forgiving me ❤️🥹</h1>
+      <p class="lead fade-up d2">The rain has stopped and my world feels warm again. I promise I won't take your heart for granted. Ever.</p>
+      <p class="lead fade-up d3"><strong>Now… can I please get a hug? 🫂</strong></p>
+      <div class="btn-row fade-up d4">
+        <button type="button" class="btn btn-primary pulse" id="hugBtn">Send a hug 🫂</button>
+      </div>
+      <div class="fade-up d5"><button type="button" class="link-btn" id="restartBtn">↺ Read it again</button></div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ MODAL: "I need some time" ============ -->
+<div id="timeModal" class="modal-backdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="timeTitle">
+    <div class="big" aria-hidden="true">🤍</div>
+    <h2 id="timeTitle">Take all the time you need</h2>
+    <p>I understand, and I'm not going anywhere. I'll be right here whenever you're ready to talk.</p>
+    <p>Just remember: I love you, and I'm really, really sorry. 🥺</p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-ghost" id="timeOk">Okay 🤍</button>
+      <button type="button" class="btn btn-primary" id="timeForgive">Actually… I forgive you 🥹</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------------------------------------------------------
+     ✏️ EASY CUSTOMISATION
+     Put her name or a pet name here (e.g. 'Riya' or 'Jaan').
+     Leave it empty to keep the default words ("you" / "love").
+     --------------------------------------------------------- */
+  const HER_NAME = '';
+
+  /* ---------------------------------------------------------
+     Helpers & environment checks
+     --------------------------------------------------------- */
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let reduceMotion = mqReduce.matches;
+  if (mqReduce.addEventListener) mqReduce.addEventListener('change', e => { reduceMotion = e.matches; });
+
+  if (HER_NAME.trim()) $$('.her-name').forEach(el => { el.textContent = HER_NAME.trim(); });
+
+  /* ---------------------------------------------------------
+     Toast: short gentle messages at the top
+     --------------------------------------------------------- */
+  const toast = $('#toast');
+  let toastTimer = null;
+  function showToast(msg, ms) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), ms || 2800);
+  }
+
+  /* ---------------------------------------------------------
+     RAIN (canvas): soft diagonal drops while she's sad.
+     Gets heavier during the letter, stops when she forgives.
+     --------------------------------------------------------- */
+  const fx = $('#fx');
+  const fctx = fx.getContext('2d');
+  let drops = [];
+  let rainLevel = 1;        // 0 = off, 1 = drizzle, 1.6 = heavier
+  let rainRaf = null;
+
+  function sizeCanvases() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    [fx, burstCanvas].forEach(c => {
+      c.width = Math.floor(window.innerWidth * dpr);
+      c.height = Math.floor(window.innerHeight * dpr);
+      c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+    });
+  }
+
+  function makeDrop(anyY) {
+    const W = window.innerWidth, H = window.innerHeight;
+    return {
+      x: rand(-60, W + 20),
+      y: anyY ? rand(-H, H) : rand(-120, -10),
+      len: rand(10, 22),
+      speed: rand(7, 12),
+      alpha: rand(.12, .32)
+    };
+  }
+
+  /** Animation loop for the rain; it pauses itself when rain is off. */
+  function rainTick() {
+    const W = window.innerWidth, H = window.innerHeight;
+    fctx.clearRect(0, 0, W, H);
+    const target = reduceMotion ? 0 : Math.round(Math.min(160, W / 7) * rainLevel);
+    while (drops.length < target) drops.push(makeDrop(true));
+    if (drops.length > target) drops.length = target;
+    fctx.lineCap = 'round';
+    fctx.lineWidth = 1.2;
+    for (const d of drops) {
+      d.x += d.speed * 0.22;
+      d.y += d.speed;
+      if (d.y > H + 20) Object.assign(d, makeDrop(false));
+      fctx.strokeStyle = `rgba(200, 205, 255, ${d.alpha})`;
+      fctx.beginPath();
+      fctx.moveTo(d.x, d.y);
+      fctx.lineTo(d.x - d.len * 0.22, d.y - d.len);
+      fctx.stroke();
+    }
+    if (target > 0 && !document.hidden) rainRaf = requestAnimationFrame(rainTick);
+    else { rainRaf = null; fctx.clearRect(0, 0, W, H); }
+  }
+  function startRain() { if (!rainRaf) rainRaf = requestAnimationFrame(rainTick); }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && rainLevel > 0) startRain(); });
+
+  /* ---------------------------------------------------------
+     HEART BURSTS (canvas): used when hearts are mended and
+     for the happy ending.
+     --------------------------------------------------------- */
+  const burstCanvas = $('#burst');
+  const bctx = burstCanvas.getContext('2d');
+  const COLORS = ['#ff4d79', '#ff8fab', '#ffd166', '#c8b6ff', '#ffffff', '#e63e6d', '#ffb3c9'];
+  let parts = [];
+  let burstRaf = null;
+
+  function drawHeart(c, s) {
+    c.beginPath();
+    c.moveTo(0, s * .3);
+    c.bezierCurveTo(0, 0, -s / 2, 0, -s / 2, s * .3);
+    c.bezierCurveTo(-s / 2, s * .6, 0, s * .8, 0, s);
+    c.bezierCurveTo(0, s * .8, s / 2, s * .6, s / 2, s * .3);
+    c.bezierCurveTo(s / 2, 0, 0, 0, 0, s * .3);
+    c.fill();
+  }
+
+  /** Explosion of hearts + confetti from a point. */
+  function burst(x, y, n) {
+    n = reduceMotion ? Math.round(n / 5) : n;
+    for (let i = 0; i < n; i++) {
+      const a = rand(0, Math.PI * 2), sp = rand(3, 11);
+      parts.push({
+        x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 3, g: rand(.15, .24),
+        rot: rand(0, 6.3), vr: rand(-.2, .2), size: rand(6, 13),
+        color: pick(COLORS), heart: Math.random() < .55, life: 0, max: rand(90, 160)
+      });
+    }
+    if (!burstRaf) burstRaf = requestAnimationFrame(burstTick);
+  }
+
+  function burstTick() {
+    const W = window.innerWidth, H = window.innerHeight;
+    bctx.clearRect(0, 0, W, H);
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i];
+      p.vx *= .985; p.vy = p.vy * .99 + p.g;
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life++;
+      const fade = p.max * .7;
+      const alpha = p.life < fade ? 1 : 1 - (p.life - fade) / (p.max - fade);
+      if (alpha <= 0 || p.y > H + 40) { parts.splice(i, 1); continue; }
+      bctx.save();
+      bctx.globalAlpha = alpha;
+      bctx.translate(p.x, p.y);
+      bctx.rotate(p.rot);
+      bctx.fillStyle = p.color;
+      if (p.heart) { bctx.translate(0, -p.size / 2); drawHeart(bctx, p.size * 1.3); }
+      else bctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+      bctx.restore();
+    }
+    if (parts.length) burstRaf = requestAnimationFrame(burstTick);
+    else { burstRaf = null; bctx.clearRect(0, 0, W, H); }
+  }
+
+  sizeCanvases();
+  startRain();
+  window.addEventListener('resize', sizeCanvases);
+
+  /* ---------------------------------------------------------
+     Floating hearts for the happy ending
+     --------------------------------------------------------- */
+  const heartsLayer = $('#heartsLayer');
+  let heartsOn = false;
+  function spawnHeart() {
+    if (!heartsOn || document.hidden || reduceMotion) return;
+    const el = document.createElement('span');
+    el.className = 'float-heart';
+    el.textContent = pick(['❤️', '💕', '💖', '💗', '🌸', '✨']);
+    el.style.left = rand(0, 96) + '%';
+    el.style.fontSize = rand(14, 28) + 'px';
+    const dur = rand(8, 14);
+    el.style.animationDuration = dur + 's';
+    el.style.setProperty('--drift', rand(-60, 60) + 'px');
+    el.style.setProperty('--spin', rand(-40, 40) + 'deg');
+    heartsLayer.appendChild(el);
+    setTimeout(() => el.remove(), dur * 1000 + 100);
+  }
+  setInterval(spawnHeart, 600);
+
+  /* ---------------------------------------------------------
+     MUSIC — composed live in the browser with the Web Audio API
+     (no files to fail). Two moods:
+       'sad'   → slow A-minor piano with soft rain noise
+       'happy' → light C-major music box (after she forgives)
+     Starts only after her first tap/click (autoplay rules).
+     --------------------------------------------------------- */
+  const Music = (function () {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    let ac, master, bus, rainGain, timer;
+    let started = false, muted = false, nextTime = 0, step = 0, mode = 'sad';
+    const VOL = 0.75;
+    const midi = n => 440 * Math.pow(2, (n - 69) / 12);
+
+    const SONGS = {
+      sad: {
+        step: 0.46,
+        chords: [[45, 52, 57, 60], [41, 48, 53, 57], [48, 55, 60, 64], [43, 50, 55, 59]],   // Am – F – C – G
+        arp: [0, 2, 3, 2, 1, 2, 3, 2],
+        melody: [76, 0, 0, 74, 72, 0, 71, 0,
+                 72, 0, 0, 69, 69, 0, 0, 0,
+                 72, 0, 74, 0, 76, 0, 77, 76,
+                 74, 0, 0, 72, 71, 0, 0, 0],
+        arpVol: 0.04, melVol: 0.075
+      },
+      happy: {
+        step: 0.32,
+        chords: [[48, 55, 60, 64], [45, 52, 57, 60], [41, 48, 53, 57], [43, 50, 55, 59]],   // C – Am – F – G
+        arp: [0, 1, 2, 3, 2, 1, 2, 3],
+        melody: [76, 0, 79, 0, 77, 76, 74, 0,
+                 72, 0, 76, 0, 74, 72, 71, 0,
+                 69, 0, 72, 0, 77, 76, 74, 0,
+                 74, 0, 71, 0, 74, 76, 79, 0],
+        arpVol: 0.045, melVol: 0.085
+      }
+    };
+
+    /** One soft piano-like note. */
+    function note(freq, t, dur, vol, type) {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = type;
+      o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(bus);
+      o.start(t); o.stop(t + dur + 0.05);
+    }
+
+    function playStep(s, t) {
+      const song = SONGS[mode];
+      const bar = Math.floor(s / 8) % 4, beat = s % 8;
+      const chord = song.chords[bar];
+      note(midi(chord[song.arp[beat]]), t, mode === 'sad' ? 1.8 : 0.9, song.arpVol, 'triangle');
+      if (beat === 0) note(midi(chord[0] - 12), t, 3.2, 0.06, 'sine');
+      const m = song.melody[s % 32];
+      if (m) {
+        note(midi(m), t, mode === 'sad' ? 2.2 : 1.3, song.melVol, 'sine');
+        note(midi(m) * 2, t, 0.5, 0.01, 'sine');
+      }
+    }
+
+    function scheduler() {
+      while (nextTime < ac.currentTime + 0.25) {
+        playStep(step, nextTime);
+        nextTime += SONGS[mode].step;
+        step = (step + 1) % 32;
+      }
+    }
+
+    /** Gentle rain hiss made from filtered noise. */
+    function makeRain() {
+      const len = ac.sampleRate * 2;
+      const buf = ac.createBuffer(1, len, ac.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+      const src = ac.createBufferSource();
+      src.buffer = buf; src.loop = true;
+      const hp = ac.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 900;
+      const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 5000;
+      rainGain = ac.createGain();
+      rainGain.gain.value = mode === 'sad' ? 0.035 : 0;
+      src.connect(hp); hp.connect(lp); lp.connect(rainGain); rainGain.connect(master);
+      src.start();
+    }
+
+    function start() {
+      if (started) return true;
+      if (!AC) return false;
+      try {
+        ac = new AC();
+        master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
+        bus = ac.createGain(); bus.connect(master);
+        // soft echo for a dreamy, lonely feel
+        const delay = ac.createDelay(); delay.delayTime.value = 0.36;
+        const fb = ac.createGain(); fb.gain.value = 0.35;
+        const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1800;
+        const wet = ac.createGain(); wet.gain.value = 0.4;
+        bus.connect(delay); delay.connect(fb); fb.connect(delay);
+        delay.connect(lp); lp.connect(wet); wet.connect(master);
+        makeRain();
+        if (ac.state === 'suspended') ac.resume();
+        nextTime = ac.currentTime + 0.1; step = 0;
+        timer = setInterval(scheduler, 70);
+        master.gain.setTargetAtTime(VOL, ac.currentTime, 1.2);
+        started = true;
+      } catch (err) {
+        console.warn('Music unavailable:', err);
+      }
+      return started;
+    }
+
+    function toggle() {
+      if (!started) return start();
+      muted = !muted;
+      if (!muted && ac.state === 'suspended') ac.resume();
+      master.gain.setTargetAtTime(muted ? 0 : VOL, ac.currentTime, 0.2);
+      return true;
+    }
+
+    /** Switch between the sad and happy songs with a short fade. */
+    function setMode(m) {
+      if (mode === m) return;
+      mode = m;
+      if (!started) return;
+      const t = ac.currentTime;
+      if (!muted) {
+        master.gain.setTargetAtTime(0.0001, t, 0.25);
+        master.gain.setTargetAtTime(VOL, t + 1.1, 0.6);
+      }
+      nextTime = t + 1.1; step = 0;
+      rainGain.gain.setTargetAtTime(m === 'sad' ? 0.035 : 0, t, 0.8);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!ac) return;
+      if (document.hidden) ac.suspend(); else if (!muted) ac.resume();
+    });
+
+    return { available: !!AC, start, toggle, setMode, isStarted: () => started, isMuted: () => muted };
+  })();
+
+  const musicBtn = $('#musicBtn');
+  /** Keep the music button's icon and label in sync with the audio state. */
+  function updateMusicBtn() {
+    let icon = '🎵', label = 'Play music', pressed = false;
+    if (!Music.available) { musicBtn.disabled = true; label = 'Music is not supported in this browser'; }
+    else if (Music.isStarted() && Music.isMuted()) { icon = '🔇'; label = 'Unmute music'; }
+    else if (Music.isStarted()) { icon = '🔊'; label = 'Mute music'; pressed = true; }
+    musicBtn.textContent = icon;
+    musicBtn.title = label;
+    musicBtn.setAttribute('aria-label', label);
+    musicBtn.setAttribute('aria-pressed', String(pressed));
+  }
+  updateMusicBtn();
+  musicBtn.addEventListener('click', () => { Music.toggle(); updateMusicBtn(); });
+
+  // Start the sad music on her very first interaction anywhere.
+  function firstGesture(e) {
+    if (e.target.closest && e.target.closest('#musicBtn')) return;
+    if (e.type === 'keydown' && ['Tab', 'Shift', 'Escape'].includes(e.key)) return;
+    ['pointerdown', 'keydown'].forEach(t => window.removeEventListener(t, firstGesture, true));
+    Music.start(); updateMusicBtn();
+  }
+  ['pointerdown', 'keydown'].forEach(t => window.addEventListener(t, firstGesture, true));
+
+  /* ---------------------------------------------------------
+     SCREENS — fade between steps and update the progress dots
+     --------------------------------------------------------- */
+  const screens = $$('.screen');
+  const dots = $$('#progress span');
+
+  function go(id) {
+    screens.forEach(s => {
+      const on = s.id === id;
+      s.classList.toggle('is-active', on);
+      s.toggleAttribute('inert', !on);
+      s.setAttribute('aria-hidden', String(!on));
+      if (on) s.scrollTop = 0;
+    });
+    const idx = Number(id.slice(1)) - 1;
+    dots.forEach((d, i) => {
+      d.classList.toggle('done', i < idx);
+      d.classList.toggle('now', i === idx);
+    });
+    // The letter gets a deeper, rainier mood
+    document.body.classList.toggle('deep', id === 's5');
+    rainLevel = id === 's6' ? 0 : id === 's5' ? 1.6 : 1;
+    if (rainLevel > 0) startRain();
+    // move keyboard focus to the new heading
+    const h = $('#' + id + ' h1, #' + id + ' h2');
+    if (h) { h.setAttribute('tabindex', '-1'); setTimeout(() => h.focus({ preventScroll: true }), 700); }
+  }
+  go('s1');
+
+  $$('[data-next]').forEach(btn => btn.addEventListener('click', () => go(btn.dataset.next)));
+
+  /* ---------------------------------------------------------
+     SCREEN 1 — "I'm still angry" gets a gentle reply
+     --------------------------------------------------------- */
+  const ANGRY_REPLIES = [
+    "That's okay. You're allowed to be. I'll wait right here. 🥺",
+    "I know… and I'm so sorry. Just a few minutes? 🙏",
+    "Even when you're angry, you're still my favourite person. 💔",
+    "I'll keep saying sorry until that frown softens. 🥹"
+  ];
+  let angryCount = 0;
+  $('#stillAngry').addEventListener('click', () => {
+    $('#reply1').textContent = ANGRY_REPLIES[angryCount % ANGRY_REPLIES.length];
+    angryCount++;
+  });
+
+  /* ---------------------------------------------------------
+     SCREEN 2 — pick a mood, get a reply, then continue
+     --------------------------------------------------------- */
+  $$('.mood').forEach(btn => btn.addEventListener('click', () => {
+    $$('.mood').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    $('#reply2').textContent = '';
+    void $('#reply2').offsetWidth;            // restart the fade-in
+    $('#reply2').textContent = btn.dataset.reply;
+    $('#next2').classList.add('show');
+  }));
+
+  /* ---------------------------------------------------------
+     SCREEN 3 — flip every "sorry" card to continue
+     --------------------------------------------------------- */
+  const flips = $$('.flip');
+  flips.forEach((card, i) => card.addEventListener('click', () => {
+    if (card.classList.contains('flipped')) return;
+    card.classList.add('flipped');
+    card.setAttribute('aria-label', 'I am sorry for: ' + $('.flip-back', card).textContent);
+    const n = flips.filter(c => c.classList.contains('flipped')).length;
+    $('#hint3').textContent = n < flips.length ? `${n} of ${flips.length} opened` : 'Thank you for reading them. 🥺';
+    if (n === flips.length) $('#next3').disabled = false;
+  }));
+
+  /* ---------------------------------------------------------
+     SCREEN 4 — mend every broken heart to reveal the promises
+     --------------------------------------------------------- */
+  const promises = $$('.promise');
+  promises.forEach(btn => btn.addEventListener('click', () => {
+    if (btn.classList.contains('mended')) return;
+    btn.classList.add('mended');
+    $('.heart', btn).textContent = '❤️';
+    $('.ptext', btn).textContent = btn.dataset.text;
+    const r = $('.heart', btn).getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, 18);
+    const n = promises.filter(p => p.classList.contains('mended')).length;
+    $('#hint4').textContent = n < promises.length ? `${n} of ${promises.length} mended` : 'Every promise, I mean it. 🤍';
+    if (n === promises.length) $('#next4').disabled = false;
+  }));
+
+  /* ---------------------------------------------------------
+     SCREEN 5 → 6 — forgiveness turns the rain into sunshine
+     --------------------------------------------------------- */
+  function forgive(fromEl) {
+    Music.start(); Music.setMode('happy'); updateMusicBtn();
+    const r = fromEl.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, 120);
+    document.body.classList.add('happy');
+    heartsOn = true;
+    go('s6');
+    const couple = $('#couple');
+    couple.classList.remove('jump');      // restart the hug animation
+    $$('.person', couple).forEach(p => { p.style.animation = 'none'; void p.offsetWidth; p.style.animation = ''; });
+    const W = window.innerWidth, H = window.innerHeight;
+    setTimeout(() => { burst(W * .2, H * .35, 80); burst(W * .8, H * .35, 80); }, 500);
+    setTimeout(() => showToast('The rain stopped. ☀️❤️', 3000), 1200);
+  }
+  $('#forgiveBtn').addEventListener('click', e => forgive(e.currentTarget));
+
+  // "I need some time" → a calm, no-pressure message
+  const timeModal = $('#timeModal');
+  let lastFocus = null;
+  function openModal() {
+    lastFocus = document.activeElement;
+    timeModal.hidden = false;
+    void timeModal.offsetWidth;
+    timeModal.classList.add('open');
+    $('#timeOk').focus({ preventScroll: true });
+  }
+  function closeModal() {
+    timeModal.classList.remove('open');
+    setTimeout(() => { if (!timeModal.classList.contains('open')) timeModal.hidden = true; }, 350);
+    if (lastFocus) lastFocus.focus({ preventScroll: true });
+  }
+  $('#timeBtn').addEventListener('click', openModal);
+  $('#timeOk').addEventListener('click', () => { closeModal(); showToast("I'll be here. Whenever you're ready. 🤍", 3200); });
+  $('#timeForgive').addEventListener('click', () => { closeModal(); setTimeout(() => forgive($('#forgiveBtn')), 250); });
+  timeModal.addEventListener('click', e => { if (e.target === timeModal) closeModal(); });
+
+  /* ---------------------------------------------------------
+     SCREEN 6 — hugs and starting over
+     --------------------------------------------------------- */
+  $('#hugBtn').addEventListener('click', e => {
+    const r = e.currentTarget.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, 110);
+    const couple = $('#couple');
+    couple.classList.remove('jump'); void couple.offsetWidth; couple.classList.add('jump');
+    showToast(pick(['Hug received! 🤗❤️', 'Biggest, tightest hug back! 🫂', 'Never letting go now 🥹💕']));
+  });
+
+  $('#restartBtn').addEventListener('click', () => {
+    document.body.classList.remove('happy');
+    heartsOn = false;
+    Music.setMode('sad');
+    flips.forEach(c => { c.classList.remove('flipped'); c.setAttribute('aria-label', 'Flip card'); });
+    promises.forEach(p => { p.classList.remove('mended'); $('.heart', p).textContent = '💔'; $('.ptext', p).textContent = 'Tap to mend'; });
+    $$('.mood').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    $('#reply1').textContent = $('#reply2').textContent = '';
+    $('#next2').classList.remove('show');
+    $('#next3').disabled = $('#next4').disabled = true;
+    $('#hint3').textContent = '0 of 4 opened';
+    $('#hint4').textContent = '0 of 5 mended';
+    go('s1');
+  });
+
+  /* ---------------------------------------------------------
+     Keyboard: Esc closes the modal; Tab stays inside it
+     --------------------------------------------------------- */
+  document.addEventListener('keydown', e => {
+    if (!timeModal.classList.contains('open')) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeModal(); return; }
+    if (e.key === 'Tab') {
+      const f = $$('button', timeModal), first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+})();
+</script>
+</body>
+</html>
